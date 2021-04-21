@@ -18,60 +18,58 @@ const useStyles = makeStyles({
 
 type Props = {
   currencies: Array<CurrencyType>;
-  mainCurrencyDivisor: number;
+  mainCurrencyValue: number;
   mainCurrencyCharCode: string;
 };
 
-export const CurrencyList: React.FC<Props> = ({
-  currencies,
-  mainCurrencyDivisor,
-  mainCurrencyCharCode,
-}) => {
-  const styles = useStyles();
-  const [filter, setFilter] = useState("");
-  const handleFilterChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter(evt.target.value);
-  };
-
-  const [filteredCurrencies, setFilteredCurrencies] = useState(currencies);
-  useEffect(() => {
-    const filterCurrencies = () => {
-      const lowerCasedFilter = filter.toLowerCase();
-
-      if (!filter) {
-        return setFilteredCurrencies(currencies);
-      } else {
-        return setFilteredCurrencies(
-          currencies.filter(
-            (c) =>
-              c.name.toLocaleLowerCase().includes(lowerCasedFilter) ||
-              c.charCode.toLocaleLowerCase().includes(lowerCasedFilter)
-          )
-        );
-      }
+export const CurrencyList: React.FC<Props> = React.memo(
+  ({ currencies, mainCurrencyValue, mainCurrencyCharCode }) => {
+    const styles = useStyles();
+    const [filter, setFilter] = useState("");
+    const handleFilterChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+      setFilter(evt.target.value);
     };
-    filterCurrencies();
-  }, [currencies, filter]);
 
-  return (
-    <Grid container direction="column" justify="center">
-      <Grid>
-        <TextField
-          value={filter}
-          onChange={handleFilterChange}
-          className={styles.input}
-          label="Название валюты или её код"
-        />
-      </Grid>
-      {filteredCurrencies.map((c) => (
-        <Grid key={c.id} className={styles.cardWrapper}>
-          <CurrencyCard
-            {...c}
-            mainCurrencyDivisor={mainCurrencyDivisor}
-            mainCurrencyCharCode={mainCurrencyCharCode}
+    const [filteredCurrencies, setFilteredCurrencies] = useState(currencies);
+    useEffect(() => {
+      const filterCurrencies = () => {
+        const lowerCasedFilter = filter.toLowerCase();
+
+        if (!filter) {
+          return setFilteredCurrencies(currencies);
+        } else {
+          return setFilteredCurrencies(
+            currencies.filter(
+              (c) =>
+                c.name.toLocaleLowerCase().includes(lowerCasedFilter) ||
+                c.charCode.toLocaleLowerCase().includes(lowerCasedFilter)
+            )
+          );
+        }
+      };
+      filterCurrencies();
+    }, [currencies, filter]);
+
+    return (
+      <Grid container direction="column" justify="center">
+        <Grid>
+          <TextField
+            value={filter}
+            onChange={handleFilterChange}
+            className={styles.input}
+            label="Название валюты или её код"
           />
         </Grid>
-      ))}
-    </Grid>
-  );
-};
+        {filteredCurrencies.map((c) => (
+          <Grid key={c.id} className={styles.cardWrapper}>
+            <CurrencyCard
+              {...c}
+              mainCurrencyValue={mainCurrencyValue}
+              mainCurrencyCharCode={mainCurrencyCharCode}
+            />
+          </Grid>
+        ))}
+      </Grid>
+    );
+  }
+);

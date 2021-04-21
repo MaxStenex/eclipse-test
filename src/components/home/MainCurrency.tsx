@@ -7,6 +7,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Paper from "@material-ui/core/Paper";
 import Select from "@material-ui/core/Select";
 import { makeStyles } from "@material-ui/styles";
+import { CurrencyType } from "../../types";
 
 const useStyles = makeStyles({
   selectWrapper: {
@@ -18,17 +19,15 @@ const useStyles = makeStyles({
 });
 
 type Props = {
-  mainCharCode: string;
-  changeMainCharCode: (value: string) => void;
-  charCodes: Array<string>;
-  mainCharName: string;
+  mainCurrency: CurrencyType | null;
+  changeMainCurrency: (currencyCharCode: string) => void;
+  currencies: Array<CurrencyType>;
 };
 
 export const MainCurrency: React.FC<Props> = ({
-  mainCharCode,
-  changeMainCharCode,
-  charCodes,
-  mainCharName,
+  currencies,
+  mainCurrency,
+  changeMainCurrency,
 }) => {
   const styles = useStyles();
 
@@ -40,16 +39,19 @@ export const MainCurrency: React.FC<Props> = ({
             <InputLabel>Основная валюта</InputLabel>
             <Select
               className={styles.select}
-              value={mainCharCode}
-              onChange={(evt) => changeMainCharCode(evt.target.value as string)}
+              value={(mainCurrency && mainCurrency.charCode) || "RUB"}
+              onChange={(e) => changeMainCurrency(e.target.value as string)}
             >
-              {charCodes.map((c) => (
-                <MenuItem key={c} value={c}>
-                  {c}
+              <MenuItem value={"RUB"}>RUB</MenuItem>
+              {currencies.map((c) => (
+                <MenuItem key={c.id} value={c.charCode}>
+                  {c.charCode}
                 </MenuItem>
               ))}
             </Select>
-            <FormHelperText>{mainCharName}</FormHelperText>
+            <FormHelperText>
+              {(mainCurrency && mainCurrency.name) || "Российский рубль"}
+            </FormHelperText>
           </FormControl>
         </Grid>
       </Card>
