@@ -18,9 +18,15 @@ const useStyles = makeStyles({
 
 type Props = {
   currencies: Array<CurrencyType>;
+  mainCurrencyDivisor: number;
+  mainCurrencyCharCode: string;
 };
 
-export const CurrencyList: React.FC<Props> = ({ currencies }) => {
+export const CurrencyList: React.FC<Props> = ({
+  currencies,
+  mainCurrencyDivisor,
+  mainCurrencyCharCode,
+}) => {
   const styles = useStyles();
   const [filter, setFilter] = useState("");
   const handleFilterChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +65,11 @@ export const CurrencyList: React.FC<Props> = ({ currencies }) => {
       </Grid>
       {filteredCurrencies.map((c) => (
         <Grid key={c.id} className={styles.cardWrapper}>
-          <CurrencyCard {...c} />
+          <CurrencyCard
+            {...c}
+            mainCurrencyDivisor={mainCurrencyDivisor}
+            mainCurrencyCharCode={mainCurrencyCharCode}
+          />
         </Grid>
       ))}
     </Grid>

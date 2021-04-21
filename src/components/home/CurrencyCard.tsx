@@ -38,9 +38,19 @@ const useStyles = makeStyles({
   },
 });
 
-type Props = CurrencyType;
+type Props = CurrencyType & {
+  mainCurrencyDivisor: number;
+  mainCurrencyCharCode: string;
+};
 
-export const CurrencyCard: React.FC<Props> = ({ name, charCode, value, valueChange }) => {
+export const CurrencyCard: React.FC<Props> = ({
+  name,
+  charCode,
+  value,
+  valueChange,
+  mainCurrencyDivisor,
+  mainCurrencyCharCode,
+}) => {
   const styles = useStyles();
 
   return (
@@ -57,7 +67,8 @@ export const CurrencyCard: React.FC<Props> = ({ name, charCode, value, valueChan
               </Typography>
               <SyncAltIcon className={styles.priceTextIcon} />
               <Typography className={styles.priceText} variant="body1" component="p">
-                {value} RUB
+                {parseFloat((value / mainCurrencyDivisor).toFixed(4))}{" "}
+                {mainCurrencyCharCode}
               </Typography>
             </Grid>
             <Grid>
@@ -74,7 +85,7 @@ export const CurrencyCard: React.FC<Props> = ({ name, charCode, value, valueChan
                     valueChange >= 0 ? styles.changeTextUp : styles.changeTextDown
                   }
                 >
-                  {valueChange}
+                  {parseFloat((valueChange / mainCurrencyDivisor).toFixed(4))}
                 </Typography>
               </Grid>
             </Grid>

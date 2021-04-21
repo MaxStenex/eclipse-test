@@ -17,7 +17,19 @@ const useStyles = makeStyles({
   },
 });
 
-export const MainCurrency = () => {
+type Props = {
+  mainCharCode: string;
+  changeMainCharCode: (value: string) => void;
+  charCodes: Array<string>;
+  mainCharName: string;
+};
+
+export const MainCurrency: React.FC<Props> = ({
+  mainCharCode,
+  changeMainCharCode,
+  charCodes,
+  mainCharName,
+}) => {
   const styles = useStyles();
 
   return (
@@ -26,15 +38,18 @@ export const MainCurrency = () => {
         <Grid container alignItems="center">
           <FormControl className={styles.selectWrapper}>
             <InputLabel>Основная валюта</InputLabel>
-            <Select className={styles.select} value="">
-              <MenuItem value={0}>
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+            <Select
+              className={styles.select}
+              value={mainCharCode}
+              onChange={(evt) => changeMainCharCode(evt.target.value as string)}
+            >
+              {charCodes.map((c) => (
+                <MenuItem key={c} value={c}>
+                  {c}
+                </MenuItem>
+              ))}
             </Select>
-            <FormHelperText>Австралийский доллар</FormHelperText>
+            <FormHelperText>{mainCharName}</FormHelperText>
           </FormControl>
         </Grid>
       </Card>
